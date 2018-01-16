@@ -37,11 +37,11 @@ else
                 <div class="media-left">
                     @if (!String.IsNullOrEmpty(place.ImageUrl))
                     {
-                        <img src="@place.ImageUrl">
+                        <img src="@place.ImageUrl" width="128 px">
                     }
                     else
-                    {
-                        <img src="http://placekitten.com/g/128/192">
+                    { 
+                        <img src="https://loremflickr.com/128/192/puppy?r=@place.Id">
                     }
                 </div>
                 <div class="media-body">

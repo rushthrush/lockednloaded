@@ -26,14 +26,14 @@
     <div class="navbar navbar-default">
         <div class="container">
             <div class="navbar-header">
-                <div class="navbar-brand"><img src="~/logo.png" /></div>
+                <div class="navbar-brand"><img src="@Url.Content("~/Content/Images/logo.png")" width="80px" /></div>
             </div>
             @* [START mine] *@
             <ul class="nav navbar-nav">
                 <li><a href="/Places">Places</a></li>
                 @if (Request.IsAuthenticated)
                 {
-                    <li>@Html.ActionLink("Mine", "Mine", "Places")</li>
+                    <li>@Html.ActionLink("My Places", "Mine", "Places")</li>
                 }
             </ul>
             @* [END mine] *@
