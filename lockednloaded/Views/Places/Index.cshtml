@@ -15,44 +15,55 @@
 //
 }
 @model LockedNLoaded.ViewModels.Places.Index
-
-<h3>Places</h3>
-<a href="/Places/Create" class="btn btn-success btn-sm" id="add-place">
-    <i class="glyphicon glyphicon-plus"></i>
-    Add place
-</a>
-
-@foreach (var place in Model.PlaceList.Places)
+@if (!Request.IsAuthenticated)
 {
-    <div class="media">
-        <a href="/Places/Details/@place.Id">
-            <div class="media-left">
-                @if (!String.IsNullOrEmpty(place.ImageUrl))
-                {
-                    <img src="@place.ImageUrl">
-                }
-                else {
-                    <img src="http://placekitten.com/g/128/192">
-                }
-            </div>
-            <div class="media-body">
-                <h4>@place.Title</h4>
-                <p>@place.Author</p>
-            </div>
-        </a>
-    </div>
+    <span>
+    @Html.ActionLink("Login", "Login", "Session") to continue
+    </span>
 }
-
-@if (Model.PlaceList.Places.Count() == 0)
+else
 {
-    <p>No places found</p>
-}
+    <span>
+    <h3>Places</h3>
+    <a href="/Places/Create" class="btn btn-success btn-sm" id="add-place">
+        <i class="glyphicon glyphicon-plus"></i>
+        Add place
+    </a>
 
-@if (null != Model.PlaceList.NextPageToken)
-{
-    <nav>
-        <ul class="pager">
-            <li><a href="?nextPageToken=@Model.PlaceList.NextPageToken">More</a></li>
-        </ul>
-    </nav>
+    @foreach (var place in Model.PlaceList.Places)
+    {
+        <div class="media">
+            <a href="/Places/Details/@place.Id">
+                <div class="media-left">
+                    @if (!String.IsNullOrEmpty(place.ImageUrl))
+                    {
+                        <img src="@place.ImageUrl">
+                    }
+                    else
+                    {
+                        <img src="http://placekitten.com/g/128/192">
+                    }
+                </div>
+                <div class="media-body">
+                    <h4>@place.Title</h4>
+                    <p>@place.Author</p>
+                </div>
+            </a>
+        </div>
+    }
+
+    @if (Model.PlaceList.Places.Count() == 0)
+    {
+        <p>No places found</p>
+    }
+
+    @if (null != Model.PlaceList.NextPageToken)
+    {
+        <nav>
+            <ul class="pager">
+                <li><a href="?nextPageToken=@Model.PlaceList.NextPageToken">More</a></li>
+            </ul>
+        </nav>
+    }
+    </span>
 }

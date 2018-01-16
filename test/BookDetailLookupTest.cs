@@ -92,7 +92,7 @@ namespace LockedNLoaded
         {
             PlaceDetailLookup bookDetailLookup = NewBookDetailLookup();
             bookDetailLookup.CreateTopicAndSubscription();
-            bookDetailLookup.EnquePlace(45);
+            bookDetailLookup.EnqueuePlace(45);
             var cancel = new CancellationTokenSource();
             var pullTask = Task.Factory.StartNew(() => bookDetailLookup.PullLoop((long bookId) =>
             {

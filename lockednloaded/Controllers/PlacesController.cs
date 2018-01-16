@@ -118,7 +118,7 @@ namespace LockedNLoaded.Controllers
                     place.ImageUrl = imageUrl;
                     _store.Update(place);
                 }
-                _placeDetailLookup.EnquePlace(place.Id);
+                _placeDetailLookup.EnqueuePlace(place.Id);
                 return RedirectToAction("Details", new { id = place.Id });
             }
             return ViewForm("Create", "Create", place);

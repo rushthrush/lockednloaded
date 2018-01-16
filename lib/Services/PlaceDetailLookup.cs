@@ -194,7 +194,7 @@ namespace LockedNLoaded.Services
         /// Publish a message asking for a book to be processed.
         /// </summary>
         // [START enqueuebook]
-        public void EnquePlace(long bookId)
+        public void EnqueuePlace(long bookId)
         {
             var message = new QueueMessage() { PlaceId = bookId };
             var json = JsonConvert.SerializeObject(message);
