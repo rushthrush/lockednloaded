@@ -1,0 +1,58 @@
+@{
+// Copyright 2015 Google Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+}
+@model LockedNLoaded.ViewModels.Places.Index
+
+<h3>Places</h3>
+<a href="/Places/Create" class="btn btn-success btn-sm" id="add-place">
+    <i class="glyphicon glyphicon-plus"></i>
+    Add place
+</a>
+
+@foreach (var place in Model.PlaceList.Places)
+{
+    <div class="media">
+        <a href="/Places/Details/@place.Id">
+            <div class="media-left">
+                @if (!String.IsNullOrEmpty(place.ImageUrl))
+                {
+                    <img src="@place.ImageUrl">
+                }
+                else {
+                    <img src="http://placekitten.com/g/128/192">
+                }
+            </div>
+            <div class="media-body">
+                <h4>@place.Title</h4>
+                <p>@place.Author</p>
+            </div>
+        </a>
+    </div>
+}
+
+@if (Model.PlaceList.Places.Count() == 0)
+{
+    <p>No places found</p>
+}
+
+@if (null != Model.PlaceList.NextPageToken)
+{
+    <nav>
+        <ul class="pager">
+            <li><a href="?nextPageToken=@Model.PlaceList.NextPageToken">More</a></li>
+        </ul>
+    </nav>
+}

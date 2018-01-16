@@ -1,0 +1,53 @@
+@{
+// Copyright 2015 Google Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+}
+@model LockedNLoaded.Models.Place
+
+<h3>Place</h3>
+<form method="post" action="/Places/Delete/@Model.Id"
+      id="deleteForm">
+    @Html.AntiForgeryToken()
+    <div class="btn-group">
+        <a href="/Places/Edit/@Model.Id"
+           class="btn btn-primary btn-sm">
+            <i class="glyphicon glyphicon-edit"></i>
+            Edit place
+        </a>
+        <button id="submit" type="submit" class="btn btn-danger btn-sm">
+            <i class="glyphicon glyphicon-trash"></i>
+            Delete place
+        </button>
+    </div>
+</form>
+
+<div class="media">
+    <div class="media-left">
+        <img class="place-image"
+             src="@(String.IsNullOrEmpty(Model.ImageUrl) ?
+        "http://placekitten.com/g/128/192" : Model.ImageUrl)">
+    </div>
+    <div class="media-body">
+        <h4 class="place-title">
+            @Model.Title
+            <small>@(Model.PublishedDate.HasValue ? Model.PublishedDate.Value.ToString("d") : null)</small>
+        </h4>
+        <h5 class="place-author">
+            By @(String.IsNullOrEmpty(Model.Author) ?
+        "Unknown" : Model.Author)
+        </h5>
+        <p class="place-description">@Model.Description</p>
+    </div>
+</div>
