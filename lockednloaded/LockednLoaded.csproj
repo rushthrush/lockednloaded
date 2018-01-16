@@ -289,7 +289,7 @@
     <Compile Include="Services\ImageUploader.cs" />
     <Compile Include="ViewModels\Places\Form.cs" />
     <Compile Include="ViewModels\Places\Index.cs" />
-    <Compile Include="Views\PlacesLibraryWebViewPage.cs" />
+    <Compile Include="Views\PlaceListWebViewPage.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
