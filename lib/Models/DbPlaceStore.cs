@@ -19,56 +19,56 @@ namespace LockedNLoaded.Models
     /// <summary>
     /// Implements IPlaceStore with a database.
     /// </summary>
-    public class DbBookStore : IPlaceStore
+    public class DbPlaceStore : IPlaceStore
     {
         private readonly ApplicationDbContext _dbcontext;
 
-        public DbBookStore(ApplicationDbContext dbcontext)
+        public DbPlaceStore(ApplicationDbContext dbcontext)
         {
             _dbcontext = dbcontext;
         }
 
         // [START create]
-        public void Create(Place book)
+        public void Create(Place place)
         {
-            var trackBook = _dbcontext.Books.Add(book);
+            var trackPlace = _dbcontext.Places.Add(place);
             _dbcontext.SaveChanges();
-            book.Id = trackBook.Id;
+            place.Id = trackPlace.Id;
         }
         // [END create]
         public void Delete(long id)
         {
-            Place book = _dbcontext.Books.Single(m => m.Id == id);
-            _dbcontext.Books.Remove(book);
+            Place place = _dbcontext.Places.Single(m => m.Id == id);
+            _dbcontext.Places.Remove(place);
             _dbcontext.SaveChanges();
         }
 
         // [START list]
         public PlaceList List(int pageSize, string nextPageToken, string userId = null)
         {
-            IQueryable<Place> query = _dbcontext.Books.OrderBy(book => book.Id);
+            IQueryable<Place> query = _dbcontext.Places.OrderBy(book => book.Id);
             if (userId != null)
             {
-                // Query for books created by the user
-                query = query.Where(book => book.CreatedById == userId);
+                // Query for items created by the user
+                query = query.Where(item => item.CreatedById == userId);
             }
             if (nextPageToken != null)
             {
-                long previousBookId = long.Parse(nextPageToken);
-                query = query.Where(book => book.Id > previousBookId);
+                long previousId = long.Parse(nextPageToken);
+                query = query.Where(item => item.Id > previousId);
             }
-            var books = query.Take(pageSize).ToArray();
+            var places = query.Take(pageSize).ToArray();
             return new PlaceList()
             {
-                Places = books,
-                NextPageToken = books.Count() == pageSize ? books.Last().Id.ToString() : null
+                Places = places,
+                NextPageToken = places.Count() == pageSize ? places.Last().Id.ToString() : null
             };
         }
         // [END list]
 
         public Place Read(long id)
         {
-            return _dbcontext.Books.Single(m => m.Id == id);
+            return _dbcontext.Places.Single(m => m.Id == id);
         }
 
         public void Update(Place book)

@@ -47,7 +47,7 @@ namespace LockedNLoaded.Services
         // [START queuemessage]
         private class QueueMessage
         {
-            public long BookId;
+            public long PlaceId;
         };
         // [END queuemessage]
 
@@ -175,7 +175,7 @@ namespace LockedNLoaded.Services
                     var qmessage = JsonConvert.DeserializeObject<QueueMessage>(
                         Encoding.UTF8.GetString(json));
                     // Invoke ProcessBook().
-                    callback(qmessage.BookId);
+                    callback(qmessage.PlaceId);
                 }
                 catch (Exception e)
                 {
@@ -196,7 +196,7 @@ namespace LockedNLoaded.Services
         // [START enqueuebook]
         public void EnquePlace(long bookId)
         {
-            var message = new QueueMessage() { BookId = bookId };
+            var message = new QueueMessage() { PlaceId = bookId };
             var json = JsonConvert.SerializeObject(message);
             _pub.Publish(_topicName, new[] { new PubsubMessage()
             {
@@ -209,12 +209,12 @@ namespace LockedNLoaded.Services
         /// Look up a book in Google's Books API.  Update the book in the book store.
         /// </summary>
         /// <param name="bookStore">Where the book is stored.</param>
-        /// <param name="bookId">The id of the book to look up.</param>
+        /// <param name="placeId">The id of the book to look up.</param>
         /// <returns></returns>
         // [START processbook]
-        public void ProcessBook(IPlaceStore bookStore, long bookId)
+        public void ProcessBook(IPlaceStore bookStore, long placeId)
         {
-            var book = bookStore.Read(bookId);
+            var book = bookStore.Read(placeId);
             _logger.LogVerbose($"Found {book.Title}.  Updating.");
             var query = "https://www.googleapis.com/books/v1/volumes?q="
                 + Uri.EscapeDataString(book.Title);

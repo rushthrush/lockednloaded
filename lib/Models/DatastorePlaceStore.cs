@@ -19,7 +19,7 @@ using System.Linq;
 
 namespace LockedNLoaded.Models
 {
-    public static class DatastoreBookStoreExtensionMethods
+    public static class DatastorePlaceStoreExtensionMethods
     {
         /// <summary>
         /// Make a datastore key given a book's id.

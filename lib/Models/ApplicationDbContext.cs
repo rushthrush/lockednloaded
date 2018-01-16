@@ -24,7 +24,7 @@ namespace LockedNLoaded.Models
         private static readonly string s_mySqlServerBaseName = "LocalMySqlServer";
         private static readonly string s_sqlServerBaseName = "LocalSqlServer";
         // [END_EXCLUDE]
-        public DbSet<Place> Books { get; set; }
+        public DbSet<Place> Places { get; set; }
         // [END dbset]
 
         /// <summary>

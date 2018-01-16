@@ -96,14 +96,14 @@ namespace LockedNLoaded
                     factory = new ApplicationDbContextFactory();
                     container.RegisterType<ApplicationDbContext>(
                         new InjectionFactory((x) => factory.Create()));
-                    container.RegisterType<IPlaceStore, DbBookStore>();
+                    container.RegisterType<IPlaceStore, DbPlaceStore>();
                     break;
 
                 case PlaceStoreFlag.SqlServer:
                     factory = new ApplicationDbContextFactory();
                     container.RegisterType<ApplicationDbContext>(
                         new InjectionFactory((x) => factory.Create()));
-                    container.RegisterType<IPlaceStore, DbBookStore>();
+                    container.RegisterType<IPlaceStore, DbPlaceStore>();
                     break;
             }
         }
