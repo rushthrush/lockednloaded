@@ -273,8 +273,6 @@ namespace LockedNLoaded.Services
                 .OrderBy(date => date);
             foreach (var date in publishedDates.Take(1))
                 book.PublishedDate = date;
-            foreach (var authors in GetInfo("authors").Take(1))
-                book.Author = string.Join(", ", authors.Select(author => author.ToString()));
             foreach (var description in GetInfo("description").Take(1))
                 book.Description = description.ToString();
             foreach (JObject imageLinks in GetInfo("imageLinks"))

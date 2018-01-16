@@ -18,26 +18,15 @@ using System.Web.Mvc;
 
 namespace LockedNLoaded.Models
 {
-    // [START book]
-    [Bind(Include = "Title, PublishedDate, Description, ImageUrl")]
-    public class Place
+    // [START user]
+    [Bind(Include = "Name, id")]
+    public class PlacesUser
     {
         [Key]
-        public long Id { get; set; }
+        public string Id { get; set; }
 
         [Required]
-        public string Title { get; set; }
-        
-        [Display(Name = "Date Published")]
-        [DataType(DataType.Date)]
-        public DateTime? PublishedDate { get; set; }
-
-        public string ImageUrl { get; set; }
-
-        [DataType(DataType.MultilineText)]
-        public string Description { get; set; }
-
-        public PlacesUser CreatedBy { get; set; }
+        public string Name { get; set; }
     }
-    // [END book]
+    // [END user]
 }

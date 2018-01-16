@@ -50,7 +50,7 @@ namespace LockedNLoaded.Models
             if (userId != null)
             {
                 // Query for items created by the user
-                query = query.Where(item => item.CreatedById == userId);
+                query = query.Where(item => item.CreatedBy.Id == userId);
             }
             if (nextPageToken != null)
             {

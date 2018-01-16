@@ -45,8 +45,8 @@
             <small>@(Model.PublishedDate.HasValue ? Model.PublishedDate.Value.ToString("d") : null)</small>
         </h4>
         <h5 class="place-author">
-            By @(String.IsNullOrEmpty(Model.Author) ?
-        "Unknown" : Model.Author)
+            By @(String.IsNullOrEmpty(Model.CreatedBy.Name) ?
+        "Unknown" : Model.CreatedBy.Name)
         </h5>
         <p class="place-description">@Model.Description</p>
     </div>

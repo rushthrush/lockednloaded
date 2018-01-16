@@ -37,20 +37,20 @@ namespace LockedNLoaded.Models
         public static long ToId(this Key key) => key.Path.First().Id;
 
         /// <summary>
-        /// Create a datastore entity with the same values as book.
+        /// Create a datastore entity with the same values as Place.
         /// </summary>
-        /// <param name="book">The book to store in datastore.</param>
+        /// <param name="place">The book to store in datastore.</param>
         /// <returns>A datastore entity.</returns>
         /// [START toentity]
-        public static Entity ToEntity(this Place book) => new Entity()
+        public static Entity ToEntity(this Place place) => new Entity()
         {
-            Key = book.Id.ToKey(),
-            ["Title"] = book.Title,
-            ["Author"] = book.Author,
-            ["PublishedDate"] = book.PublishedDate?.ToUniversalTime(),
-            ["ImageUrl"] = book.ImageUrl,
-            ["Description"] = book.Description,
-            ["CreatedById"] = book.CreatedById
+            Key = place.Id.ToKey(),
+            ["Title"] = place.Title,
+            ["PublishedDate"] = place.PublishedDate?.ToUniversalTime(),
+            ["ImageUrl"] = place.ImageUrl,
+            ["Description"] = place.Description,
+            ["CreatedById"] = place.CreatedBy.Id,
+            ["CreatedByName"] = place.CreatedBy.Name
         };
         // [END toentity]
 
@@ -59,16 +59,15 @@ namespace LockedNLoaded.Models
         /// </summary>
         /// <param name="entity">An entity retrieved from datastore.</param>
         /// <returns>A book.</returns>
-        public static Place ToBook(this Entity entity) => new Place()
+        public static Place ToPlace(this Entity entity) => new Place()
         {
             Id = entity.Key.Path.First().Id,
             Title = (string)entity["Title"],
-            Author = (string)entity["Author"],
             PublishedDate = (DateTime?)entity["PublishedDate"],
             ImageUrl = (string)entity["ImageUrl"],
             Description = (string)entity["Description"],
-            CreatedById = (string)entity["CreatedById"]
-        };
+            CreatedBy = new PlacesUser() { Name = (string)entity["CreatedByName"], Id = (string)entity["CreatedByid"] }
+            };
     }
 
     public class DatastoreBookStore : IPlaceStore
@@ -112,7 +111,7 @@ namespace LockedNLoaded.Models
             var results = _db.RunQuery(query);
             return new PlaceList()
             {
-                Places = results.Entities.Select(entity => entity.ToBook()),
+                Places = results.Entities.Select(entity => entity.ToPlace()),
                 NextPageToken = results.Entities.Count == query.Limit ?
                     results.EndCursor.ToBase64() : null
             };
@@ -121,7 +120,7 @@ namespace LockedNLoaded.Models
 
         public Place Read(long id)
         {
-            return _db.Lookup(id.ToKey())?.ToBook();
+            return _db.Lookup(id.ToKey())?.ToPlace();
         }
 
         public void Update(Place book)

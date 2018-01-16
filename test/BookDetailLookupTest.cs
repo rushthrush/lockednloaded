@@ -110,7 +110,6 @@ namespace LockedNLoaded
             bookDetailLookup.ProcessBook(bookStore, 3);
             Assert.Equal(3, bookStore.UpdatedBook.Id);
             Assert.Equal("Test-Driven JavaScript Development", bookStore.UpdatedBook.Title);
-            Assert.Equal("Christian Johansen", bookStore.UpdatedBook.Author);
         }
 
         [Fact]
@@ -131,7 +130,6 @@ namespace LockedNLoaded
             Place book = new Place();
             PlaceDetailLookup.UpdateBookFromJson(json, book);
             Assert.Equal("Where the Red Fern Grows", book.Title);
-            Assert.Equal("Wilson Rawls", book.Author);
             Assert.Equal(new DateTime(1978, 1, 1), book.PublishedDate);
             Assert.Contains("Ozarks", book.Description);
             Assert.Equal("http://books.google.com/books/content?" +
@@ -146,7 +144,6 @@ namespace LockedNLoaded
             Place book = new Place();
             PlaceDetailLookup.UpdateBookFromJson(json, book);
             Assert.Equal(null, book.Title);
-            Assert.Equal(null, book.Author);
             Assert.Equal(null, book.PublishedDate);
             Assert.Equal(null, book.Description);
         }

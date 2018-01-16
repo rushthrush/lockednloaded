@@ -24,14 +24,14 @@ namespace LockedNLoaded.Models
         /// Creates a new book.  The Id of the book will be filled when the
         /// function returns.
         /// </summary>
-        void Create(Place book);
+        void Create(Place place);
 
         Place Read(long id);
 
-        void Update(Place book);
+        void Update(Place place);
 
         void Delete(long id);
 
-        PlaceList List(int pageSize, string nextPageToken, string userId = null);
+        PlaceList List(int pageSize, string nextPageToken, string UserId = null);
     }
 }

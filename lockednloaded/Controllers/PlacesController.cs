@@ -59,7 +59,7 @@ namespace LockedNLoaded.Controllers
                 return View("Index", new ViewModels.Places.Index()
                 {
                     // Fetch places created by the logged in user
-                    PlaceList = _store.List(_pageSize, nextPageToken, userId: CurrentUser.UserId)
+                    PlaceList = _store.List(_pageSize, nextPageToken, CurrentUser.UserId)
                 });
             }
             else
@@ -104,7 +104,7 @@ namespace LockedNLoaded.Controllers
                 if (Request.IsAuthenticated)
                 {
                     // Track the user who created this place
-                    place.CreatedById = CurrentUser.UserId;
+                    place.CreatedBy = new PlacesUser(){ Id = CurrentUser.UserId, Name = CurrentUser.Name};
                 }
 
                 _store.Create(place);
