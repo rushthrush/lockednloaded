@@ -40,7 +40,7 @@ namespace LockedNLoaded.Models
         /// Pulls connection string from Web.config.
         /// </summary>
         internal ApplicationDbContext() : base("name=" +
-            ((LibUnityConfig.ChooseBookStoreFromConfig() == PlaceStoreFlag.MySql)
+            ((LibUnityConfig.ChoosePlaceStoreFromConfig() == PlaceStoreFlag.MySql)
             ? s_mySqlServerBaseName : s_sqlServerBaseName))
         {
         }

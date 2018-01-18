@@ -12,6 +12,8 @@
 // License for the specific language governing permissions and limitations under
 // the License.
 
+using System.Device.Location;
+
 namespace LockedNLoaded.Models
 {
     /// <summary>
@@ -32,6 +34,6 @@ namespace LockedNLoaded.Models
 
         void Delete(long id);
 
-        PlaceList List(int pageSize, string nextPageToken, string UserId = null);
+        PlaceList List(int pageSize, string nextPageToken, string UserId = null, GeoCoordinate coordinates = null);
     }
 }

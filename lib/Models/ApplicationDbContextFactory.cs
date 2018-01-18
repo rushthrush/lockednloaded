@@ -29,7 +29,7 @@ namespace LockedNLoaded.Models
         /// <returns></returns>
         public ApplicationDbContext Create()
         {
-            if (LibUnityConfig.ChooseBookStoreFromConfig() == PlaceStoreFlag.MySql)
+            if (LibUnityConfig.ChoosePlaceStoreFromConfig() == PlaceStoreFlag.MySql)
             {
                 string envConnectionString = Environment.GetEnvironmentVariable(
                     "LockedNLoaded:ConnectionStringCloudSql");
@@ -40,7 +40,7 @@ namespace LockedNLoaded.Models
                         new MySql.Data.MySqlClient.MySqlConnection(envConnectionString));
                 }
             }
-            else if (LibUnityConfig.ChooseBookStoreFromConfig() == PlaceStoreFlag.SqlServer)
+            else if (LibUnityConfig.ChoosePlaceStoreFromConfig() == PlaceStoreFlag.SqlServer)
             {
                 string envConnectionString = Environment.GetEnvironmentVariable(
                     "LockedNLoaded:ConnectionStringSqlServer");

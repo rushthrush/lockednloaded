@@ -58,7 +58,7 @@ namespace LockedNLoaded
 
         public static string ProjectId => GetConfigVariable("LockedNLoaded:ProjectId");
 
-        public static PlaceStoreFlag ChooseBookStoreFromConfig()
+        public static PlaceStoreFlag ChoosePlaceStoreFromConfig()
         {
             string bookStore = GetConfigVariable("LockedNLoaded:PlaceStore")?.ToLower();
             switch (bookStore)
@@ -84,28 +84,8 @@ namespace LockedNLoaded
         /// <param name="container">The unity container to configure.</param>
         public static void RegisterTypes(IUnityContainer container)
         {
-            ApplicationDbContextFactory factory;
-            switch (ChooseBookStoreFromConfig())
-            {
-                case PlaceStoreFlag.Datastore:
                     container.RegisterInstance<IPlaceStore>(
-                        new DatastoreBookStore(ProjectId));
-                    break;
-
-                case PlaceStoreFlag.MySql:
-                    factory = new ApplicationDbContextFactory();
-                    container.RegisterType<ApplicationDbContext>(
-                        new InjectionFactory((x) => factory.Create()));
-                    container.RegisterType<IPlaceStore, DbPlaceStore>();
-                    break;
-
-                case PlaceStoreFlag.SqlServer:
-                    factory = new ApplicationDbContextFactory();
-                    container.RegisterType<ApplicationDbContext>(
-                        new InjectionFactory((x) => factory.Create()));
-                    container.RegisterType<IPlaceStore, DbPlaceStore>();
-                    break;
-            }
+                        new DatastorePlaceStore(ProjectId));
         }
     }
 }

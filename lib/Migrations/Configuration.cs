@@ -21,12 +21,12 @@ namespace LockedNLoaded.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
-            if (LibUnityConfig.ChooseBookStoreFromConfig() == PlaceStoreFlag.MySql)
+            if (LibUnityConfig.ChoosePlaceStoreFromConfig() == PlaceStoreFlag.MySql)
             {
                 SetSqlGenerator("MySql.Data.MySqlClient",
                     new MySql.Data.Entity.MySqlMigrationSqlGenerator());
             }
-            else if (LibUnityConfig.ChooseBookStoreFromConfig() == PlaceStoreFlag.SqlServer)
+            else if (LibUnityConfig.ChoosePlaceStoreFromConfig() == PlaceStoreFlag.SqlServer)
             {
                 SetSqlGenerator("System.Data.SqlClient",
                     new System.Data.Entity.SqlServer.SqlServerMigrationSqlGenerator());

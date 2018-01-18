@@ -14,23 +14,21 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Device.Location;
 using System.Web.Mvc;
 
 namespace LockedNLoaded.Models
 {
-    // [START book]
-    [Bind(Include = "Title, PublishedDate, Description, ImageUrl")]
+    // [START Place]
+    [Bind(Include = "LocationName,  Coordinates, Description, ImageUrl")]
     public class Place
     {
         [Key]
         public long Id { get; set; }
 
         [Required]
-        public string Title { get; set; }
-        
-        [Display(Name = "Date Published")]
-        [DataType(DataType.Date)]
-        public DateTime? PublishedDate { get; set; }
+        [Display(Name = "Location Name")]
+        public string LocationName { get; set; }
 
         public string ImageUrl { get; set; }
 
@@ -38,6 +36,9 @@ namespace LockedNLoaded.Models
         public string Description { get; set; }
 
         public PlacesUser CreatedBy { get; set; }
+
+        [Required]
+        public GeoCoordinate Coordinates { get; set; }
     }
-    // [END book]
+    // [END Place]
 }

@@ -21,15 +21,20 @@
 <form action="/Places/@Model.FormAction/@Model.Place.Id" method="post" id="place-form" enctype="multipart/form-data">
     @Html.AntiForgeryToken()
     <div class="form-group">
-        @Html.LabelFor(model => model.Place.Title)
-        @Html.EditorFor(model => model.Place.Title, new { htmlAttributes = new { @class = "form-control" } })
-        @Html.ValidationMessageFor(model => model.Place.Title, "", new { @class = "text-danger" })
+        @Html.LabelFor(model => model.Place.LocationName)
+        @Html.EditorFor(model => model.Place.LocationName, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.Place.LocationName, "", new { @class = "text-danger" })
     </div>
-    
+
     <div class="form-group">
-        @Html.LabelFor(model => model.Place.PublishedDate)
-        @Html.EditorFor(model => model.Place.PublishedDate, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
-        @Html.ValidationMessageFor(model => model.Place.PublishedDate, "", new { @class = "text-danger" })
+        @Html.LabelFor(model => model.Place.Coordinates.Latitude)
+        @Html.EditorFor(model => model.Place.Coordinates.Latitude, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+        @Html.ValidationMessageFor(model => model.Place.Coordinates.Latitude, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Place.Coordinates.Longitude)
+        @Html.EditorFor(model => model.Place.Coordinates.Longitude, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+        @Html.ValidationMessageFor(model => model.Place.Coordinates.Longitude, "", new { @class = "text-danger" })
     </div>
 
     <div class="form-group">

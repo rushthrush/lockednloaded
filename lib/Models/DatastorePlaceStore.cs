@@ -15,6 +15,7 @@
 using Google.Cloud.Datastore.V1;
 using Google.Protobuf;
 using System;
+using System.Device.Location;
 using System.Linq;
 
 namespace LockedNLoaded.Models
@@ -27,7 +28,7 @@ namespace LockedNLoaded.Models
         /// <param name="id">A book's id.</param>
         /// <returns>A datastore key.</returns>
         public static Key ToKey(this long id) =>
-            new Key().WithElement("Book", id);
+            new Key().WithElement("Place", id);
 
         /// <summary>
         /// Make a book id given a datastore key.
@@ -45,12 +46,13 @@ namespace LockedNLoaded.Models
         public static Entity ToEntity(this Place place) => new Entity()
         {
             Key = place.Id.ToKey(),
-            ["Title"] = place.Title,
-            ["PublishedDate"] = place.PublishedDate?.ToUniversalTime(),
+            ["LocationName"] = place.LocationName,
             ["ImageUrl"] = place.ImageUrl,
             ["Description"] = place.Description,
             ["CreatedById"] = place.CreatedBy.Id,
-            ["CreatedByName"] = place.CreatedBy.Name
+            ["CreatedByName"] = place.CreatedBy.Name,
+            ["Latitude"] = place.Coordinates.Latitude,
+            ["Longitude"] = place.Coordinates.Longitude,
         };
         // [END toentity]
 
@@ -62,15 +64,40 @@ namespace LockedNLoaded.Models
         public static Place ToPlace(this Entity entity) => new Place()
         {
             Id = entity.Key.Path.First().Id,
-            Title = (string)entity["Title"],
-            PublishedDate = (DateTime?)entity["PublishedDate"],
+            LocationName = (string)entity["LocationName"],
+            Coordinates = new GeoCoordinate((double)entity["Latitude"], (double)entity["Longitude"]),
             ImageUrl = (string)entity["ImageUrl"],
             Description = (string)entity["Description"],
             CreatedBy = new PlacesUser() { Name = (string)entity["CreatedByName"], Id = (string)entity["CreatedByid"] }
             };
+
+        public static double MaxLatitude(this GeoCoordinate coord, int distance)
+        {
+            double lat = 0;
+
+            return lat;
+        }
+        public static double MinLatitude(this GeoCoordinate coord, int distance)
+        {
+            double lat = 0;
+
+            return lat;
+        }
+        public static double MaxLongitude(this GeoCoordinate coord, int distance)
+        {
+            double lon = 0;
+
+            return lon;
+        }
+        public static double MinLongitude(this GeoCoordinate coord, int distance)
+        {
+            double lon = 0;
+
+            return lon;
+        }
     }
 
-    public class DatastoreBookStore : IPlaceStore
+    public class DatastorePlaceStore : IPlaceStore
     {
         private readonly string _projectId;
         private readonly DatastoreDb _db;
@@ -79,19 +106,19 @@ namespace LockedNLoaded.Models
         /// Create a new datastore-backed bookstore.
         /// </summary>
         /// <param name="projectId">Your Google Cloud project id</param>
-        public DatastoreBookStore(string projectId)
+        public DatastorePlaceStore(string projectId)
         {
             _projectId = projectId;
             _db = DatastoreDb.Create(_projectId);
         }
 
         // [START create]
-        public void Create(Place book)
+        public void Create(Place place)
         {
-            var entity = book.ToEntity();
-            entity.Key = _db.CreateKeyFactory("Book").CreateIncompleteKey();
+            var entity = place.ToEntity();
+            entity.Key = _db.CreateKeyFactory("Place").CreateIncompleteKey();
             var keys = _db.Insert(new[] { entity });
-            book.Id = keys.First().Path.First().Id;
+            place.Id = keys.First().Path.First().Id;
         }
         // [END create]
 
@@ -101,11 +128,20 @@ namespace LockedNLoaded.Models
         }
 
         // [START list]
-        public PlaceList List(int pageSize, string nextPageToken, string userId = null)
+        public PlaceList List(int pageSize, string nextPageToken, string userId = null, GeoCoordinate coordinates = null)
         {
-            var query = new Query("Book") { Limit = pageSize };
+            var query = new Query("Place") { Limit = pageSize };
             if (userId != null)
                 query.Filter = Filter.Equal("CreatedById", userId);
+            if (coordinates != null)
+            {
+                query.Filter = Filter.And(
+                                Filter.GreaterThan("Latitude", coordinates.MaxLatitude(100)), 
+                                Filter.GreaterThan("Latitude", coordinates.MinLatitude(100)),
+                                Filter.GreaterThan("Longitude", coordinates.MaxLongitude(100)),
+                                Filter.GreaterThan("Longitude", coordinates.MinLongitude(100))
+                                );
+            }
             if (!string.IsNullOrWhiteSpace(nextPageToken))
                 query.StartCursor = ByteString.FromBase64(nextPageToken);
             var results = _db.RunQuery(query);
@@ -120,7 +156,13 @@ namespace LockedNLoaded.Models
 
         public Place Read(long id)
         {
-            return _db.Lookup(id.ToKey())?.ToPlace();
+            //return _db.Lookup(id.ToKey())?.ToPlace();
+
+            var tmp = _db.Lookup(id.ToKey());
+            Place place = null;
+            if (tmp != null)
+                place = tmp.ToPlace();
+            return place;
         }
 
         public void Update(Place book)

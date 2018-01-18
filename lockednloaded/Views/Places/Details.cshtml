@@ -41,8 +41,8 @@
     </div>
     <div class="media-body">
         <h4 class="place-title">
-            @Model.Title
-            <small>@(Model.PublishedDate.HasValue ? Model.PublishedDate.Value.ToString("d") : null)</small>
+            @Model.LocationName
+            <small>@(Model.Coordinates != null ? Model.Coordinates.ToString() : "unknown")</small>
         </h4>
         <h5 class="place-author">
             By @(String.IsNullOrEmpty(Model.CreatedBy.Name) ?

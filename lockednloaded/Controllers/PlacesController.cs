@@ -29,16 +29,13 @@ namespace LockedNLoaded.Controllers
 
         private readonly IPlaceStore _store;
         private readonly ImageUploader _imageUploader;
-        private readonly PlaceDetailLookup _placeDetailLookup;
 
         public User CurrentUser => new User(this.User);
 
-        public PlacesController(IPlaceStore store, ImageUploader imageUploader,
-            PlaceDetailLookup placeDetailLookup)
+        public PlacesController(IPlaceStore store, ImageUploader imageUploader)
         {
             _store = store;
             _imageUploader = imageUploader;
-            _placeDetailLookup = placeDetailLookup;
         }
 
         // GET: Places
@@ -101,11 +98,7 @@ namespace LockedNLoaded.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (Request.IsAuthenticated)
-                {
-                    // Track the user who created this place
-                    place.CreatedBy = new PlacesUser(){ Id = CurrentUser.UserId, Name = CurrentUser.Name};
-                }
+                place.CreatedBy = new PlacesUser(){ Id = CurrentUser.UserId, Name = CurrentUser.Name};
 
                 _store.Create(place);
 
@@ -118,7 +111,6 @@ namespace LockedNLoaded.Controllers
                     place.ImageUrl = imageUrl;
                     _store.Update(place);
                 }
-                _placeDetailLookup.EnqueuePlace(place.Id);
                 return RedirectToAction("Details", new { id = place.Id });
             }
             return ViewForm("Create", "Create", place);
@@ -164,9 +156,10 @@ namespace LockedNLoaded.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Place place, long id)
         {
+            place.Id = id;
             if (ModelState.IsValid)
             {
-                place.Id = id;
+                place.CreatedBy = new PlacesUser() { Id = CurrentUser.UserId, Name = CurrentUser.Name };
                 _store.Update(place);
                 return RedirectToAction("Details", new { id = place.Id });
             }

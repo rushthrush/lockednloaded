@@ -31,14 +31,6 @@ namespace LockedNLoaded
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            // Launch a thread that watches the book detail subscription.
-            var container = App_Start.UnityConfig.GetConfiguredContainer();
-            LibUnityConfig.RegisterTypes(container);
-            var bookDetailLookup = new PlaceDetailLookup(LibUnityConfig.ProjectId,
-                logger: LogTicker.Instance);
-            bookDetailLookup.CreateTopicAndSubscription();
-            var pullTask = bookDetailLookup.StartPullLoop(container.Resolve<IPlaceStore>(),
-                new CancellationTokenSource().Token);
         }
     }
 }

@@ -47,10 +47,6 @@ namespace LockedNLoaded.App_Start
         public static void RegisterTypes(IUnityContainer container)
         {
             LibUnityConfig.RegisterTypes(container);
-            var placeDetailLookup = new PlaceDetailLookup(LibUnityConfig.ProjectId);
-            placeDetailLookup.CreateTopicAndSubscription();
-            container.RegisterInstance<PlaceDetailLookup>(placeDetailLookup);
-
             container.RegisterInstance<ImageUploader>(
                 new ImageUploader(
                   LibUnityConfig.GetConfigVariable("LockedNLoaded:BucketName")
