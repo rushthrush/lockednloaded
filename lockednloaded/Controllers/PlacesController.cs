@@ -92,20 +92,21 @@ namespace LockedNLoaded.Controllers
         }
 
         [HttpPost]
-        public JsonResult RatingIncrement(long id)
+        public async Task<ActionResult> RatingIncrement(long id)
         {
-            Place place = _store.Read((long)id);
+            Place place = _store.Read(id);
             place.UserRating++;
             _store.Update(place);
-            return Json(place);
+            return PartialView("_PlaceTile", place);
+
         }
         [HttpPost]
-        public JsonResult RatingDecrement(long id)
+        public async Task<ActionResult> RatingDecrement(long id)
         {
-            Place place = _store.Read((long)id);
+            Place place = _store.Read(id);
             place.UserRating--;
             _store.Update(place);
-            return Json(place);
+            return PartialView("_PlaceTile", place);
         }
         // POST: Places/Create
         [HttpPost]

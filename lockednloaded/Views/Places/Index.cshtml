@@ -2,12 +2,51 @@
 @if (!Request.IsAuthenticated)
 {
     <span>
-    @Html.ActionLink("Login", "Login", "Session") to continue
+        @Html.ActionLink("Login", "Login", "Session") to continue
     </span>
 }
 else
 {
-    <span>
+    <script language="javascript">
+        (function ($)
+        {
+            $.fn.IncrementRating = function (id) {
+                $.ajax(
+                    {
+                        url: "Places/RatingIncrement",
+                        method: "POST",
+                        data: { id: id },
+                        cache: false,
+                        async: true,
+                        success: function (result, status, xhr) {
+                            $("#Place_" + id).html(result);
+                        },
+                        error: function (xhr, status, error) {
+                            alert("Error: " + status);
+                        }
+                    });
+            };
+            $.fn.DecrementRating = function (id) {
+                $.ajax(
+                    {
+                        url: "Places/RatingDecrement",
+                        method: "POST",
+                        data: { id: id },
+                        cache: false,
+                        async: true,
+                        success: function (result, status, xhr)
+                        {
+                            $("#Place_" + id).html(result);
+                        },
+                        error: function (xhr, status, error)
+                        {
+                            alert("Error: " + status);
+                        }
+                    });
+            };
+        })(jQuery);
+    </script>
+    <div>
         <h3>Places</h3>
         <a href="/Places/Create" class="btn btn-success btn-sm" id="add-place">
             <i class="glyphicon glyphicon-plus"></i>
@@ -16,57 +55,26 @@ else
         <div class="list-group list-group-horizontal">
             @foreach (var place in Model.PlaceList.Places)
             {
-            <div class="list-group-item">
-                <table border="0">
-                    <tr>
-                        <td rowspan="4">
-                            <a href="/Places/Edit/@place.Id">
-                                <img class="img-rounded"
-                                     src="@(!String.IsNullOrEmpty(place.ImageUrl) ? place.ImageUrl :
-                    "http://maps.googleapis.com/maps/api/staticmap?center=" + place.Coordinates.Latitude + "," + place.Coordinates.Longitude + "&zoom=14&size=100x100&sensor=false&key=AIzaSyDO3iYZcZSxJo726LMjdNdPDyeWIlDfFEc"
-                    )" />
-                            </a>
-                        </td>
-                        <td style="text-align:center">
-                            <div class="badge">@place.UserRating</div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="text-align:center">
-                            <div class="btn-group">
-                                <a onclick="alert('@place.Id');" class="btn btn-success btn-sm"><i class="glyphicon glyphicon-thumbs-up"></i></a>
-                                <a onclick="alert('@place.Id');" class="btn btn-danger btn-sm"><i class="glyphicon glyphicon-thumbs-down"></i></a>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="text-align:center">
-                            <a href="/Places/Edit/@place.Id">
-                                <div class="strong">@place.LocationName</div>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="text-align:center">
-                            <div class="small">@place.CreatedBy.Name</div>
-                        </td>
-                    </tr>                    
-                </table>
-           </div>
+
+                <div class="list-group-item" id="Place_@place.Id">
+                    @{
+                        Html.RenderPartial("_PlaceTile", place);
+                    }
+                </div>
             }
-       </div>
+        </div>
         @if (Model.PlaceList.Places.Count() == 0)
-        {
-            <p>No places found</p>
-        } 
+{
+        <p>No places found</p>
+}
 
         @if (null != Model.PlaceList.NextPageToken)
-        {
-            <nav>
-                <ul class="pager">
-                    <li><a href="?nextPageToken=@Model.PlaceList.NextPageToken">More</a></li>
-                </ul>
-            </nav>
-         }
-        </span>
+{
+        <nav>
+            <ul class="pager">
+                <li><a href="?nextPageToken=@Model.PlaceList.NextPageToken">More</a></li>
+            </ul>
+        </nav>
+}
+</div>
 }

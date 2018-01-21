@@ -1,0 +1,37 @@
+﻿@model LockedNLoaded.Models.Place
+
+    <table border="0">
+        <tr>
+            <td rowspan="4">
+                <a href="/Places/Edit/@Model.Id">
+                    <img class="img-rounded"
+                         src="@(!String.IsNullOrEmpty(Model.ImageUrl) ? Model.ImageUrl :
+                    "http://maps.googleapis.com/maps/api/staticmap?center=" + Model.Coordinates.Latitude + "," + Model.Coordinates.Longitude + "&zoom=14&size=100x100&sensor=false&key=AIzaSyDO3iYZcZSxJo726LMjdNdPDyeWIlDfFEc"
+                    )" />
+                </a>
+            </td>
+            <td style="text-align:center">
+                <div class="badge">@Model.UserRating</div>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:center">
+                <div class="btn-group">
+                    <a onclick="$(this).IncrementRating('@Model.Id');" class="btn btn-success btn-sm"><i class="glyphicon glyphicon-thumbs-up"></i></a>
+                    <a onclick="$(this).DecrementRating('@Model.Id');" class="btn btn-danger btn-sm"><i class="glyphicon glyphicon-thumbs-down"></i></a>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:center">
+                <a href="/Places/Edit/@Model.Id">
+                    <div class="strong">@Model.LocationName</div>
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:center">
+                <div class="small">@Model.CreatedBy.Name</div>
+            </td>
+        </tr>
+    </table>
