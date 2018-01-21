@@ -91,6 +91,22 @@ namespace LockedNLoaded.Controllers
             return ViewForm("Create", "Create");
         }
 
+        [HttpPost]
+        public JsonResult RatingIncrement(long id)
+        {
+            Place place = _store.Read((long)id);
+            place.UserRating++;
+            _store.Update(place);
+            return Json(place);
+        }
+        [HttpPost]
+        public JsonResult RatingDecrement(long id)
+        {
+            Place place = _store.Read((long)id);
+            place.UserRating--;
+            _store.Update(place);
+            return Json(place);
+        }
         // POST: Places/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -113,7 +129,7 @@ namespace LockedNLoaded.Controllers
                     place.ImageUrl = imageUrl;
                     _store.Update(place);
                 }
-                return RedirectToAction("Details", new { id = place.Id });
+                return RedirectToAction("Index");
             }
             return ViewForm("Create", "Create", place);
         }
@@ -165,7 +181,7 @@ namespace LockedNLoaded.Controllers
                 var orig = _store.Read((long)id);
                 place.CreatedBy = new PlacesUser() { Id = orig.CreatedBy.Id, Name = orig.CreatedBy.Name };
                 _store.Update(place);
-                return RedirectToAction("Details", new { id = place.Id });
+                return RedirectToAction("Index");
             }
             return ViewForm("Edit", "Edit", place);
         }
