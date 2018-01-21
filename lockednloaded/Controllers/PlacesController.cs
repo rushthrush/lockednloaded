@@ -14,6 +14,7 @@
 
 using LockedNLoaded.Models;
 using LockedNLoaded.Services;
+using System;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -99,6 +100,7 @@ namespace LockedNLoaded.Controllers
             if (ModelState.IsValid)
             {
                 place.CreatedBy = new PlacesUser(){ Id = CurrentUser.UserId, Name = CurrentUser.Name};
+                place.UserRating = Convert.ToInt64(Request.Form["Place.UserRating"]);
 
                 _store.Create(place);
 
@@ -157,9 +159,11 @@ namespace LockedNLoaded.Controllers
         public ActionResult Edit(Place place, long id)
         {
             place.Id = id;
+            place.UserRating = Convert.ToInt64(Request.Form["Place.UserRating"]);
             if (ModelState.IsValid)
             {
-                place.CreatedBy = new PlacesUser() { Id = CurrentUser.UserId, Name = CurrentUser.Name };
+                var orig = _store.Read((long)id);
+                place.CreatedBy = new PlacesUser() { Id = orig.CreatedBy.Id, Name = orig.CreatedBy.Name };
                 _store.Update(place);
                 return RedirectToAction("Details", new { id = place.Id });
             }

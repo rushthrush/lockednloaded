@@ -43,17 +43,26 @@ namespace LockedNLoaded.Models
         /// <param name="place">The book to store in datastore.</param>
         /// <returns>A datastore entity.</returns>
         /// [START toentity]
-        public static Entity ToEntity(this Place place) => new Entity()
+        public static Entity ToEntity(this Place place)
         {
-            Key = place.Id.ToKey(),
-            ["LocationName"] = place.LocationName,
-            ["ImageUrl"] = place.ImageUrl,
-            ["Description"] = place.Description,
-            ["CreatedById"] = place.CreatedBy.Id,
-            ["CreatedByName"] = place.CreatedBy.Name,
-            ["Latitude"] = place.Coordinates.Latitude,
-            ["Longitude"] = place.Coordinates.Longitude,
-        };
+            var entity =  new Entity()
+            {
+                Key = place.Id.ToKey(),
+                ["LocationName"] = place.LocationName,
+                ["ImageUrl"] = place.ImageUrl,
+                ["Description"] = place.Description,
+                ["Latitude"] = place.Coordinates.Latitude,
+                ["Longitude"] = place.Coordinates.Longitude,
+                ["UserRating"] = place.UserRating,
+            };
+            if (place.CreatedBy != null)
+            {
+                entity["CreatedById"] = place.CreatedBy.Id;
+                entity["CreatedByName"] = place.CreatedBy.Name;
+            }
+            return entity;
+        }
+
         // [END toentity]
 
         /// <summary>
@@ -68,8 +77,9 @@ namespace LockedNLoaded.Models
             Coordinates = new GeoCoordinate((double)entity["Latitude"], (double)entity["Longitude"]),
             ImageUrl = (string)entity["ImageUrl"],
             Description = (string)entity["Description"],
-            CreatedBy = new PlacesUser() { Name = (string)entity["CreatedByName"], Id = (string)entity["CreatedByid"] }
-            };
+            CreatedBy = new PlacesUser() { Name = (string)entity["CreatedByName"], Id = (string)entity["CreatedByid"] },
+            UserRating = (long)(entity["UserRating"] == null ? 1 : entity["UserRating"])
+        };
 
         public static double MaxLatitude(this GeoCoordinate coord, int distance)
         {
@@ -165,9 +175,9 @@ namespace LockedNLoaded.Models
             return place;
         }
 
-        public void Update(Place book)
+        public void Update(Place place)
         {
-            _db.Update(book.ToEntity());
+            _db.Update(place.ToEntity());
         }
     }
 }

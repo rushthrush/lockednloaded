@@ -15,6 +15,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Device.Location;
+using System.Web.ModelBinding;
 using System.Web.Mvc;
 
 namespace LockedNLoaded.Models
@@ -39,6 +40,10 @@ namespace LockedNLoaded.Models
 
         [Required]
         public GeoCoordinate Coordinates { get; set; }
+
+        [Required]
+        [Display(Name = "User Rating")]
+        public long UserRating { get; set; }
     }
     // [END Place]
 }

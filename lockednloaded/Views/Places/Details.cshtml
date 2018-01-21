@@ -1,19 +1,3 @@
-@{
-// Copyright 2015 Google Inc.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
-}
 @model LockedNLoaded.Models.Place
 
 <h3>Place</h3>
@@ -36,12 +20,13 @@
 <div class="media">
     <div class="media-left">
         <img class="place-image"
-             src="@(String.IsNullOrEmpty(Model.ImageUrl) ?
-        "https://loremflickr.com/128/192/puppy?r=" + Model.Id : Model.ImageUrl)">
+             src="@(!String.IsNullOrEmpty(Model.ImageUrl) ? Model.ImageUrl :
+                 "http://maps.googleapis.com/maps/api/staticmap?center=" + Model.Coordinates.Latitude + "," + Model.Coordinates.Longitude + "&zoom=10&size=100x100&sensor=false&key=AIzaSyDO3iYZcZSxJo726LMjdNdPDyeWIlDfFEc"
+                 )">
     </div>
     <div class="media-body">
         <h4 class="place-title">
-            @Model.LocationName
+            @Model.LocationName Rating:@Model.UserRating<br />
             <small>@(Model.Coordinates != null ? Model.Coordinates.ToString() : "unknown")</small>
         </h4>
         <h5 class="place-author">

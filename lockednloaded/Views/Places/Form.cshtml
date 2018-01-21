@@ -1,22 +1,64 @@
-@{
-// Copyright 2015 Google Inc.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
-}
 @model LockedNLoaded.ViewModels.Places.Form
 
 <h3>@Model.Action place</h3>
+<script>
+    $(function () {
+        
+        function updatePosition(position) {
+            alert(position.coords.latitude);
+            $("#Place_Coordinates_Latitude").val(position.coords.latitude);
+            $("#Place_Coordinates_Longitude").val(position.coords.longitude);
+        }
+
+        function latlong() {
+            return new google.maps.LatLng($("#Place_Coordinates_Latitude").val(), $("#Place_Coordinates_Longitud").val());
+        }
+        function position() {
+            map.setCenter(latlong());
+        }
+
+        //var map = new google.maps.Map($("#map")[0],
+        //    {
+        //        zoom: 8,
+        //        center: latlong(),
+        //        mapTypeId: google.maps.MapTypeId.ROADMAP
+        //    });
+        var spinner = $("#Place_UserRating").spinner();
+         $("#Place_Coordinates_Latitude, #Place_Coordinates_Longitude").spinner(
+            {
+            step: .001
+            }
+        );
+         $("#locateme").click(
+             function ()
+             {
+                 alert("get");
+                 if (navigator.geolocation)
+                 {
+                     navigator.geolocation.getCurrentPosition(updatePosition);
+                 }
+                 else
+                 {
+                     alert("Geolocation is not supported by this browser.");
+                 }
+             });
+
+        //$("#Place_Coordinates_Latitude, #Place_Coordinates_Longitude").spinner(
+        //    {
+        //    step: .001,
+        //    change: position,
+        //    stop: position
+        //    }
+        //);
+    });
+    
+</script>
+<style>
+    #map {
+        width: 500px;
+        height: 500px;
+    }
+</style>
 <!-- [START form] -->
 <form action="/Places/@Model.FormAction/@Model.Place.Id" method="post" id="place-form" enctype="multipart/form-data">
     @Html.AntiForgeryToken()
@@ -25,18 +67,20 @@
         @Html.EditorFor(model => model.Place.LocationName, new { htmlAttributes = new { @class = "form-control" } })
         @Html.ValidationMessageFor(model => model.Place.LocationName, "", new { @class = "text-danger" })
     </div>
-
     <div class="form-group">
-        @Html.LabelFor(model => model.Place.Coordinates.Latitude)
-        @Html.EditorFor(model => model.Place.Coordinates.Latitude, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+        @Html.LabelFor(model => model.Place.UserRating)
+        @Html.TextBoxFor(model => model.Place.UserRating, new { @class = "form-control", style = "width:50px;" })
+        @Html.ValidationMessageFor(model => model.Place.UserRating, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Place.Coordinates)
+        @Html.TextBoxFor(model => model.Place.Coordinates.Latitude, new { @class = "form-control", style = "display:inline;width:50px;" })
+        @Html.TextBoxFor(model => model.Place.Coordinates.Longitude, new { @class = "form-control", style = "width:50px;" })
         @Html.ValidationMessageFor(model => model.Place.Coordinates.Latitude, "", new { @class = "text-danger" })
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(model => model.Place.Coordinates.Longitude)
-        @Html.EditorFor(model => model.Place.Coordinates.Longitude, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
         @Html.ValidationMessageFor(model => model.Place.Coordinates.Longitude, "", new { @class = "text-danger" })
+        <button id="locateme" onclick="getLocation()" type="button">here</button>
     </div>
-
+    
     <div class="form-group">
         @Html.LabelFor(model => model.Place.Description)
         @Html.EditorFor(model => model.Place.Description, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
@@ -44,7 +88,7 @@
     </div>
     <!-- [START image] -->
     <div class="form-group">
-        @Html.Label("Cover Image")
+        @Html.Label("Picture")
         <input type="file" id="image" name="image" value="@Model.Place.ImageUrl" class="form-control">
         @Html.HiddenFor(model => model.Place.ImageUrl)
     </div>
