@@ -4,25 +4,21 @@
 <script>
     $(function () {
         
-        function updatePosition(position) {
-            alert(position.coords.latitude);
+        function updatePosition(position)
+        {
             $("#Place_Coordinates_Latitude").val(position.coords.latitude);
             $("#Place_Coordinates_Longitude").val(position.coords.longitude);
         }
 
-        function latlong() {
+        function latlong()
+        {
             return new google.maps.LatLng($("#Place_Coordinates_Latitude").val(), $("#Place_Coordinates_Longitud").val());
         }
-        function position() {
+        function updateMap()
+        {
             map.setCenter(latlong());
         }
-
-        //var map = new google.maps.Map($("#map")[0],
-        //    {
-        //        zoom: 8,
-        //        center: latlong(),
-        //        mapTypeId: google.maps.MapTypeId.ROADMAP
-        //    });
+        
         var spinner = $("#Place_UserRating").spinner();
          $("#Place_Coordinates_Latitude, #Place_Coordinates_Longitude").spinner(
             {
@@ -32,7 +28,6 @@
          $("#locateme").click(
              function ()
              {
-                 alert("get");
                  if (navigator.geolocation)
                  {
                      navigator.geolocation.getCurrentPosition(updatePosition);
@@ -42,14 +37,15 @@
                      alert("Geolocation is not supported by this browser.");
                  }
              });
-
-        //$("#Place_Coordinates_Latitude, #Place_Coordinates_Longitude").spinner(
-        //    {
-        //    step: .001,
-        //    change: position,
-        //    stop: position
-        //    }
-        //);
+         $("#Place_Coordinates_Latitude").on("input",
+             function ()
+             {
+                 updateMap();
+             });
+         $("#Place_Coordinates_Longitude").on("input",
+             function () {
+                 updateMap();
+             });
     });
     
 </script>
@@ -74,25 +70,19 @@
     </div>
     <div class="form-group">
         @Html.LabelFor(model => model.Place.Coordinates)
-        @Html.TextBoxFor(model => model.Place.Coordinates.Latitude, new { @class = "form-control", style = "display:inline;width:50px;" })
-        @Html.TextBoxFor(model => model.Place.Coordinates.Longitude, new { @class = "form-control", style = "width:50px;" })
+        @Html.TextBoxFor(model => model.Place.Coordinates.Latitude, new { @class = "form-control", style = "display:inline;width:80px;" })
+        @Html.TextBoxFor(model => model.Place.Coordinates.Longitude, new { @class = "form-control", style = "width:80px;" })
         @Html.ValidationMessageFor(model => model.Place.Coordinates.Latitude, "", new { @class = "text-danger" })
         @Html.ValidationMessageFor(model => model.Place.Coordinates.Longitude, "", new { @class = "text-danger" })
-        <button id="locateme" onclick="getLocation()" type="button">here</button>
+        <a id="locateme" class="btn btn-success btn-sm" title="Use My Location!"><i class="glyphicon glyphicon-map-marker"></i></a>
+        <br /><span id="map">
+        </span>
     </div>
-    
     <div class="form-group">
         @Html.LabelFor(model => model.Place.Description)
         @Html.EditorFor(model => model.Place.Description, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
         @Html.ValidationMessageFor(model => model.Place.Description, "", new { @class = "text-danger" })
     </div>
-    <!-- [START image] -->
-    <div class="form-group">
-        @Html.Label("Picture")
-        <input type="file" id="image" name="image" value="@Model.Place.ImageUrl" class="form-control">
-        @Html.HiddenFor(model => model.Place.ImageUrl)
-    </div>
-    <!-- [END image] -->
 
     <button type="submit" class="btn btn-success">Save</button>
 </form>
